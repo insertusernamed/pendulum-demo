@@ -30,9 +30,6 @@ export class Renderer {
             this.fps = this.frameCount;
             this.frameCount = 0;
             this.lastFPSUpdate = currentTime;
-            document.getElementById(
-                "fps-counter"
-            ).textContent = `FPS: ${this.fps}`;
         }
     }
 
@@ -52,30 +49,37 @@ export class Renderer {
         this.ctx.stroke();
     }
 
-    drawTrails() {
-        // Draw first pendulum trail
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = this.pendulum1Color + "55";
-        this.drawTrail(this.trail1);
-
-        // Draw second pendulum trail
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = this.pendulum2Color + "55";
-        this.drawTrail(this.trail2);
-    }
-
     drawTrail(trail) {
-        for (let i = 0; i < trail.length - 1; i++) {
-            const alpha = i / trail.length;
+        if (trail.length < 2) return;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(trail[0].x, trail[0].y);
+
+        for (let i = 1; i < trail.length; i++) {
+            const alpha = (i / trail.length) ** 2; // Quadratic fade for smoother transition
             this.ctx.globalAlpha = alpha;
-            this.ctx.moveTo(trail[i].x, trail[i].y);
-            this.ctx.lineTo(trail[i + 1].x, trail[i + 1].y);
+            this.ctx.lineTo(trail[i].x, trail[i].y);
         }
+
+        this.ctx.strokeWidth = 2;
         this.ctx.stroke();
         this.ctx.globalAlpha = 1.0;
     }
 
+    drawTrails() {
+        // Draw first pendulum trail
+        this.ctx.strokeStyle = this.pendulum1Color + "88";
+        this.drawTrail(this.trail1);
+
+        // Draw second pendulum trail
+        this.ctx.strokeStyle = this.pendulum2Color + "88";
+        this.drawTrail(this.trail2);
+    }
+
     draw() {
+        const rodColor = getComputedStyle(document.body)
+            .getPropertyValue("--rod-color")
+            .trim();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Update trails
@@ -96,7 +100,7 @@ export class Renderer {
         this.ctx.beginPath();
         this.ctx.moveTo(this.simulation.rodStartX, this.simulation.rodStartY);
         this.ctx.lineTo(this.simulation.rod1EndX, this.simulation.rod1EndY);
-        this.ctx.strokeStyle = "#000";
+        this.ctx.strokeStyle = rodColor;
         this.ctx.stroke();
         this.drawPendulumBob(
             this.simulation.rod1EndX,
@@ -107,12 +111,63 @@ export class Renderer {
         this.ctx.beginPath();
         this.ctx.moveTo(this.simulation.rod1EndX, this.simulation.rod1EndY);
         this.ctx.lineTo(this.simulation.rod2EndX, this.simulation.rod2EndY);
-        this.ctx.strokeStyle = "#000";
+        this.ctx.strokeStyle = rodColor;
         this.ctx.stroke();
         this.drawPendulumBob(
             this.simulation.rod2EndX,
             this.simulation.rod2EndY,
             true
         );
+
+        this.drawNerdStats();
+    }
+
+    drawNerdStats() {
+        const stats = [
+            {
+                text: `FPS: ${this.fps}`,
+                color:
+                    document.documentElement.getAttribute("data-theme") ===
+                    "dark"
+                        ? "#ffffff"
+                        : "#000000",
+            },
+            {
+                text: `θ₁: ${this.simulation.angle1.toFixed(3)} rad`,
+                color: this.pendulum1Color,
+            },
+            {
+                text: `ω₁: ${this.simulation.angleVelocity1.toFixed(3)} rad/s`,
+                color: this.pendulum1Color,
+            },
+            {
+                text: `θ₂: ${this.simulation.angle2.toFixed(3)} rad`,
+                color: this.pendulum2Color,
+            },
+            {
+                text: `ω₂: ${this.simulation.angleVelocity2.toFixed(3)} rad/s`,
+                color: this.pendulum2Color,
+            },
+        ];
+
+        this.ctx.save();
+        this.ctx.font = "14px monospace";
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "bottom";
+
+        const padding = 10;
+        const lineHeight = 20;
+        const y = this.canvas.height - padding;
+
+        stats.forEach((stat, i) => {
+            this.ctx.fillStyle = stat.color + "DD"; // Adding some transparency
+            this.ctx.fillText(
+                stat.text,
+                padding,
+                y - (stats.length - 1 - i) * lineHeight
+            );
+        });
+
+        this.ctx.restore();
     }
 }

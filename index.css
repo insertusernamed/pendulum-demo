@@ -5,6 +5,31 @@
     box-sizing: border-box;
 }
 
+/* Add at the start after CSS Reset */
+:root {
+    --bg-color: #f6f7f9;
+    --text-color: #333;
+    --panel-bg: #fafafa;
+    --panel-shadow: rgba(0, 0, 0, 0.1);
+    --border-color: #eee;
+    --rod-color: #000;
+    --note-color: #666;
+    --note-border: #4a5568;
+    --canvas-border: #000;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #fff;
+    --panel-bg: #2d2d2d;
+    --panel-shadow: rgba(0, 0, 0, 0.3);
+    --border-color: #404040;
+    --rod-color: #fff;
+    --note-color: #b0b0b0;
+    --note-border: #6b7280;
+    --canvas-border: #404040;
+}
+
 html, body {
     height: 100%;
     font-family: Arial, sans-serif;
@@ -13,8 +38,9 @@ html, body {
 
 body {
     line-height: 1.6;
-    background: #f6f7f9;
-    color: #333;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 img, picture, video, canvas, svg {
@@ -37,28 +63,173 @@ ul, ol {
 
 .container {
     height: calc(100vh - 2em);
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 250px 250px;
     gap: 2em;
     margin: 1em;
 }
 
-#fps-counter {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px 10px;
+.canvas-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.canvas-container canvas {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--canvas-border);
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+.controls, .about-panel {
+    background: var(--panel-bg);
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--panel-shadow);
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4a5568 transparent;
+    position: relative;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.controls::-webkit-scrollbar, 
+.about-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.controls::-webkit-scrollbar-track,
+.about-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.controls::-webkit-scrollbar-thumb,
+.about-panel::-webkit-scrollbar-thumb {
+    background-color: #4a5568;
+    border-radius: 3px;
+}
+
+.controls::after,
+.about-panel::after {
+    content: '';
+    position: fixed; /* Change from absolute to fixed */
+    bottom: 1em;    /* Match container margin */
+    width: 250px;   /* Match column width */
+    height: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.05));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.controls:not(:hover)::-webkit-scrollbar,
+.about-panel:not(:hover)::-webkit-scrollbar {
+    width: 3px;
+}
+
+.controls:hover::after,
+.about-panel:hover::after {
+    opacity: 1;
+}
+
+.about-panel {
+    color: var(--text-color);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.about-panel h2 {
+    margin-bottom: 1em;
+}
+
+.about-panel h3 {
+    margin: 1em 0 0.5em 0;
+}
+
+.about-panel ul {
+    list-style: disc;
+    margin-left: 1.5em;
+}
+
+.about-panel li {
+    margin: 0.3em 0;
+}
+
+.about-panel p {
+    margin-bottom: 1em;
+}
+
+.about-panel a {
+    color: #3498db;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.about-panel a:hover {
+    color: #2980b9;
+}
+
+.about-footer {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.about-footer p {
+    margin: 0.5em 0;
+}
+
+.equation {
+    background: #fff;
+    padding: 1em;
+    margin: 1em 0;
     border-radius: 4px;
+    border: 1px solid #eee;
+    overflow-x: auto;
+}
+
+.equation pre {
     font-family: monospace;
+    font-size: 0.85em;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.eq-caption {
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
+    margin-top: 0.5em;
+}
+
+.variables-list {
+    list-style: none;
+    margin-left: 0;
+}
+
+.variables-list li {
+    margin: 0.5em 0;
+}
+
+.note {
+    font-style: italic;
+    color: var(--note-color);
+    border-left: 3px solid var(--note-border);
+    padding-left: 1em;
+    margin: 1em 0;
 }
 
 .controls {
     min-width: 250px;
     padding: 1em;
-    background: #fafafa;
+    background: var(--panel-bg);  /* Update to use theme variable */
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--panel-shadow);  /* Update to use theme variable */
     max-height: 100vh;
     overflow-y: auto;
 }
@@ -69,7 +240,7 @@ ul, ol {
 
 .control-group h3 {
     margin-bottom: 0.5em;
-    color: #333;
+    color: var(--text-color);  /* Update to use theme variable */
 }
 
 .control-item {
@@ -80,7 +251,8 @@ ul, ol {
     display: block;
     margin-bottom: 0.2em;
     font-size: 0.9em;
-    color: #666;
+    color: var(--text-color);  /* Update to use theme variable */
+    opacity: 0.8;  /* Add slight transparency for labels */
 }
 
 .control-item input[type="range"] {
@@ -117,4 +289,133 @@ button.paused {
 
 button.paused:hover {
     background: #c53030;
+}
+
+.fun-btn {
+    font-weight: bold;
+    transform-origin: center;
+    transition: all 0.2s ease;
+    padding: 0.4em 0.8em;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.fun-btn:hover {
+    transform: scale(1.02) rotate(-2deg);
+    filter: brightness(1.1);
+}
+
+/* Add styles for the button container */
+.button-container {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
+}
+
+.button-container button {
+    flex: 1;  /* Make both buttons share space equally */
+}
+
+/* Add at the end of the file */
+.nerd-stats {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Add styles for the dark mode toggle button */
+.dark-mode-toggle {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    z-index: 100;
+}
+
+.dark-mode-toggle:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+/* Add mobile menu button */
+.mobile-menu-btn {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* Add mobile menu container */
+.sidebar-container {
+    display: contents;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        margin: 0;
+        height: 100vh;
+        gap: 0;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .sidebar-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 350px;
+        background: var(--bg-color);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: 1em;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-container.active {
+        display: block;
+    }
+
+    .controls, .about-panel {
+        max-height: none;
+        margin-bottom: 1em;
+    }
+
+    .canvas-container {
+        height: 100vh;
+    }
+
+    /* Adjust dark mode toggle position for mobile */
+    .dark-mode-toggle {
+        bottom: 20px;
+    }
 }

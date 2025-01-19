@@ -4,65 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="index.css">
-    <title>Document</title>
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <title>Pendulum Demo</title>
 </head>
 <body>
     <div class="container">
-        <div>
-            <div id="fps-counter">FPS: 0</div>
-            <canvas id="canvas" style="border:1px solid black;"></canvas>
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰ Controls</button>
+            <button class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</button>
         </div>
-        <div class="controls">
-            <button id="resetDefaultsBtn">Reset to Defaults</button>
-            <div class="control-group">
-                <h3>Simulation Controls</h3>
-                <button id="pauseBtn">Pause</button>
-                <button id="restartBtn">Restart</button>
-                <div class="control-item">
-                    <label for="simSpeed">Simulation Speed:</label>
-                    <input type="range" id="simSpeed" min="0.1" max="2" step="0.1" value="1">
-                    <span id="simSpeedValue">1.0x</span>
+        <div class="sidebar-container" id="sidebarContainer">
+            <div class="controls">
+                <div class="button-container">
+                    <button id="resetDefaultsBtn">Reset</button>
+                    <button id="randomizeBtn" class="fun-btn">🎲 Chaos!</button>
                 </div>
-                <div class="control-item">
-                    <label for="fpsCap">FPS Cap:</label>
-                    <input type="range" id="fpsCap" min="30" max="144" step="1" value="60">
-                    <span id="fpsCapValue">60</span>
+                <div class="control-group">
+                    <h3>Simulation Controls</h3>
+                    <button id="pauseBtn">Pause</button>
+                    <button id="restartBtn">Restart</button>
+                    <div class="control-item">
+                        <label for="simSpeed">Simulation Speed:</label>
+                        <input type="range" id="simSpeed" min="0.1" max="2" step="0.1" value="1">
+                        <span id="simSpeedValue">1.0x</span>
+                    </div>
+                    <div class="control-item">
+                        <label for="fpsCap">FPS Cap:</label>
+                        <input type="range" id="fpsCap" min="30" max="144" step="1" value="60">
+                        <span id="fpsCapValue">60</span>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="control-group">
-                <h3>First Pendulum</h3>
-                <div class="control-item">
-                    <label for="color1">Color:</label>
-                    <input type="color" id="color1" value="#537d8d">
+                
+                <div class="control-group">
+                    <h3>First Pendulum</h3>
+                    <div class="control-item">
+                        <label for="color1">Color:</label>
+                        <input type="color" id="color1" value="#3498db">
+                    </div>
+                    <div class="control-item">
+                        <label for="length1">Length:</label>
+                        <input type="range" id="length1" min="50" max="300" value="180">
+                        <span id="length1Value">180</span>
+                    </div>
+                    <div class="control-item">
+                        <label for="radius1">Bob Radius:</label>
+                        <input type="range" id="radius1" min="5" max="30" value="15">
+                        <span id="radius1Value">15</span>
+                    </div>
                 </div>
-                <div class="control-item">
-                    <label for="length1">Length:</label>
-                    <input type="range" id="length1" min="50" max="300" value="180">
-                    <span id="length1Value">180</span>
-                </div>
-                <div class="control-item">
-                    <label for="radius1">Bob Radius:</label>
-                    <input type="range" id="radius1" min="5" max="30" value="15">
-                    <span id="radius1Value">15</span>
-                </div>
-            </div>
 
-            <div class="control-group">
-                <h3>Second Pendulum</h3>
-                <div class="control-item">
-                    <label for="color2">Color:</label>
-                    <input type="color" id="color2" value="#a64452">
+                <div class="control-group">
+                    <h3>Second Pendulum</h3>
+                    <div class="control-item">
+                        <label for="color2">Color:</label>
+                        <input type="color" id="color2" value="#e74c3c">
+                    </div>
+                    <div class="control-item">
+                        <label for="length2">Length:</label>
+                        <input type="range" id="length2" min="50" max="300" value="140">
+                        <span id="length2Value">140</span>
+                    </div>
+                    <div class="control-item">
+                        <label for="radius2">Bob Radius:</label>
+                        <input type="range" id="radius2" min="5" max="30" value="15">
+                        <span id="radius2Value">15</span>
+                    </div>
                 </div>
-                <div class="control-item">
-                    <label for="length2">Length:</label>
-                    <input type="range" id="length2" min="50" max="300" value="140">
-                    <span id="length2Value">140</span>
-                </div>
-                <div class="control-item">
-                    <label for="radius2">Bob Radius:</label>
-                    <input type="range" id="radius2" min="5" max="30" value="15">
-                    <span id="radius2Value">15</span>
+            </div>
+            <div class="about-panel">
+                <h2>Double Pendulum Simulation</h2>
+                <p>As a Computer Science student, I've always been fascinated by <a href="https://en.wikipedia.org/wiki/Chaos_theory" target="_blank">chaos theory</a> and how simple systems can produce complex behaviors. The <a href="https://en.wikipedia.org/wiki/Double_pendulum" target="_blank">double pendulum</a> is a perfect example of this phenomenon, which led me to create this interactive simulation.</p>
+                
+                <h3>How It Works</h3>
+                <p>A double pendulum consists of two weights (called "bobs") connected by rigid rods. The second pendulum is attached to the end of the first one. While a single pendulum moves in a predictable way, adding a second pendulum creates a <a href="https://en.wikipedia.org/wiki/Chaos_theory#Sensitivity_to_initial_conditions" target="_blank">chaotic system</a>.</p>
+
+                <p>The motion is influenced by:</p>
+                <ul>
+                    <li>Gravity pulling both weights down</li>
+                    <li>The momentum of each pendulum affecting the other</li>
+                    <li>The connecting point between the pendulums transferring forces</li>
+                </ul>
+
+                <h3>Interesting Behaviors</h3>
+                <ul>
+                    <li>Small changes in starting position can lead to completely different patterns</li>
+                    <li>At high energy, the motion becomes chaotic and unpredictable</li>
+                    <li>At low energy, it can show more regular, periodic motion</li>
+                </ul>
+
+                <h3>Technical Details</h3>
+                <p>The simulation uses physics principles like conservation of energy and momentum. To keep the system stable and interesting for longer periods, it:</p>
+                <ul>
+                    <li>Maintains a target energy level to prevent the pendulum from eventually stopping</li>
+                    <li>Applies subtle energy corrections to compensate for numerical approximations</li>
+                    <li>Uses a small damping factor to prevent unrealistic energy gains</li>
+                    <li>Limits maximum speeds to avoid numerical errors</li>
+                    <li>Updates positions 60 times per second for smooth animation</li>
+                </ul>
+
+                <h3>Understanding the Stats</h3>
+                <ul>
+                    <li><strong>θ₁ (theta₁)</strong>: Angle of the first pendulum in radians</li>
+                    <li><strong>θ₂ (theta₂)</strong>: Angle of the second pendulum in radians</li>
+                    <li><strong>ω₁ (omega₁)</strong>: Angular velocity of the first pendulum in radians per second</li>
+                    <li><strong>ω₂ (omega₂)</strong>: Angular velocity of the second pendulum in radians per second</li>
+                </ul>
+                <p class="note">Unlike a real double pendulum that would eventually stop due to air resistance and friction, this simulation maintains its energy level to demonstrate the chaotic behavior indefinitely!</p>
+
+                <p class="note">Try adjusting the lengths and starting position to see how small changes affect the motion!</p>
+                <div class="about-footer">
+                    <p>Made with ❤️ for <a href="https://en.wikipedia.org/wiki/Dynamical_system" target="_blank">Dynamical Systems</a></p>
+                    <p><a href="https://github.com/insertusernamed/pendulum-demo" target="_blank">View on GitHub</a></p>
                 </div>
             </div>
         </div>

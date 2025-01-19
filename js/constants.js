@@ -17,8 +17,8 @@ export const DEFAULTS = {
     rodLength2: 140,
     bob1Radius: 15,
     bob2Radius: 15,
-    pendulum1Color: "#3498db",
-    pendulum2Color: "#e74c3c",
+    pendulum1Color: "#3498db", // Updated from "#3498db"
+    pendulum2Color: "#e74c3c", // Updated from "#e74c3c"
     targetFPS: 60,
     simulationSpeed: 1,
 };
